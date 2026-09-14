@@ -6,7 +6,7 @@ Variation-driven array tools for Rhino 8 on Windows and macOS. Array Studio adds
 shift, rotation, scale, random and gradual variation, and spatial falloff to five
 common architectural array workflows.
 
-**Package Manager:** 0.9.0 · **Next source release:** 0.9.1 · **Command:** `ArrayStudio` · **License:** MIT
+**Current release:** 0.9.1 · **Command:** `ArrayStudio` · **License:** MIT
 
 ## Install and launch
 

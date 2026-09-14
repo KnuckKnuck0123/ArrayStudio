@@ -36,7 +36,7 @@ appropriate OS entry in `.vscode/tasks.json`.
 | Window sizing | Revised layout exercised on macOS and Windows; broader display-scaling coverage welcome |
 | Windows source workflow and UI | Noah reports all tools working |
 | Installed package on macOS | Clean-start `ArrayStudio` command check passed |
-| Public Package Manager | `ArrayStudio (0.9.0)` verified on McNeel's server |
+| Public Package Manager | `ArrayStudio (0.9.1)` verified on McNeel's server |
 | Rectangular X/Y/Z mode | Rhino engine checks passed; Noah reports the interactive 0.9.1 source workflow works great |
 
 Automated checks do not establish interactive acceptance. Record platform, Rhino
