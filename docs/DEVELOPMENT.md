@@ -30,6 +30,7 @@ plugin commands or require package installation.
 | `src/ArrayTools.py` | Development launcher with implementation reloads |
 | `src/array_tools/app.py` | Tool chooser, window lifecycle, and switching state |
 | `src/ProfileArray.py` | Dedicated plan linear/grid launcher |
+| `src/RectangularArray.py` | Dedicated X/Y/Z count-and-spacing launcher |
 | `src/ArrayAlongCurve.py` | Dedicated curve launcher |
 | `src/SurfaceArray.py` | Dedicated surface launcher |
 | `src/VolumeArray.py` | Dedicated exterior/interior launcher |
@@ -57,6 +58,8 @@ display-scaling reports remain welcome.
   rotations, then shift apply in each placement frame around the copy's base point.
 - Curve mode divides by length using a count; local X follows the tangent when
   orientation following is enabled. Distance-spacing input is not implemented.
+- Rectangular mode places a regular X/Y/Z grid along the captured construction
+  plane axes with independent count and spacing on each axis.
 - Surface and exterior modes sample UV cell centers per face and reject trimmed
   regions. Counts do not alter control points and are not equal-distance spacing.
 - Interior mode filters a construction-plane-aligned bounding-box grid with solid
@@ -103,7 +106,7 @@ geometry, and OS-specific behavior require [manual testing](TESTING.md).
 ## Package Manager releases
 
 `ArrayStudio.rhproj` builds Array Studio as one `ArrayStudio` Rhino command.
-The embedded `array_tools` Python library contains the chooser and four modes.
+The embedded `array_tools` Python library contains the chooser and five modes.
 The project is MIT licensed and targets Rhino 8 on Windows and macOS. Build the
 distributable, inspect its contents, and test a clean installation without this
 source checkout before publishing a new version to the public Package Manager server.

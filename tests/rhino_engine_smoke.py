@@ -14,6 +14,20 @@ def run():
     moved = rg.Point3d(0, 0, 0)
     moved.Transform(transforms[-1])
     assert moved.DistanceTo(rg.Point3d(20, 10, 0)) < 1e-8
+    transforms, points = build_transforms({'mode': 'Rectangular', 'count_x': 2,
+        'count_y': 3, 'count_z': 4, 'spacing_x': 5, 'spacing_y': 7,
+        'spacing_z': 11}, base)
+    assert len(transforms) == 24
+    assert points[-1].DistanceTo(rg.Point3d(5, 14, 33)) < 1e-8
+    transforms, points = build_transforms({'mode': 'Rectangular', 'count_x': 2,
+        'count_y': 2, 'count_z': 3, 'spacing_x': 5, 'spacing_y': 5,
+        'spacing_z': 10, 'variation': 'Gradual', 'progression': 'Z',
+        'shift_end': (0, 0, 6)}, base)
+    for transform, point in zip(transforms, points):
+        moved = rg.Point3d(0, 0, 0)
+        moved.Transform(transform)
+        expected_shift = 6 * point.Z / 20
+        assert moved.DistanceTo(point + rg.Vector3d(0, 0, expected_shift)) < 1e-8
     transforms, _ = build_transforms({'mode': 'Linear', 'count_x': 2, 'variation': 'Gradual',
                                       'scale_end': (2, 2, 2), 'shift_end': (5, 0, 0)}, base)
     moved = rg.Point3d(1, 0, 0)
@@ -57,6 +71,13 @@ def run():
         pass
     else:
         raise AssertionError('Candidate budget was not enforced')
+    try:
+        build_transforms({'mode': 'Rectangular', 'count_x': 20, 'count_y': 20,
+                          'count_z': 20}, base)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('Rectangular candidate budget was not enforced')
     print('ArrayTools engine: all Rhino geometry smoke checks passed.')
 
 

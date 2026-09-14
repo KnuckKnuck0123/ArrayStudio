@@ -3,10 +3,10 @@
 # Array Studio
 
 Variation-driven array tools for Rhino 8 on Windows and macOS. Array Studio adds
-shift, rotation, scale, random and gradual variation, and spatial falloff to four
+shift, rotation, scale, random and gradual variation, and spatial falloff to five
 common architectural array workflows.
 
-**Current release:** 0.9.0 · **Command:** `ArrayStudio` · **License:** MIT
+**Package Manager:** 0.9.0 · **Next source release:** 0.9.1 · **Command:** `ArrayStudio` · **License:** MIT
 
 ## Install and launch
 
@@ -23,6 +23,7 @@ required. Rhino supplies Python 3, RhinoCommon, rhinoscriptsyntax, and Eto.
 | Tool | Use it for |
 | --- | --- |
 | **Profile Array** | Aggregate curves in a linear or construction-plane grid arrangement. |
+| **Rectangular Array** | Build a regular 3D array with independent X/Y/Z counts and spacing. |
 | **Along Curve** | Place curves, polysurfaces, groups, or blocks along a planar or 3D path. |
 | **Surface Array** | Place sources at trim-aware U/V samples on a surface or polysurface face. |
 | **Volume Array** | Switch between samples on exterior faces and a grid inside a closed volume. |
@@ -35,7 +36,8 @@ returns to the panel you came from.
 1. Select the source geometry. Curves, polysurfaces, groups, and block instances
    can be used as one repeated unit.
 2. Pick a base point if the source bounding-box center is not appropriate.
-3. For Along Curve, Surface, or Volume, select the target geometry.
+3. For Along Curve, Surface, or Volume, select the target geometry. Rectangular
+   Array uses the active construction-plane axes and needs no target.
 4. Set counts and placement options.
 5. Choose **Random** or **Gradual** variation and adjust Shift, Rotate, or Scale.
 6. Optionally enable **Falloff**, pick its center, and set its radius, strength,
@@ -55,7 +57,7 @@ new output.
 - **Random** samples values between minimum and maximum limits. The same seed and
   settings reproduce an arrangement; **New random arrangement** changes the seed.
 - **Gradual** interpolates from start to end along curve order, surface U/V, or a
-  selected spatial axis in a volume.
+  selected X/Y/Z axis in a rectangular array or volume.
 - **Falloff** blends shift and rotation toward zero and scale toward one outside
   its zone. It changes variation strength without removing copies.
 - **Uniform scale** uses one scale value on all axes. Turn it off for independent

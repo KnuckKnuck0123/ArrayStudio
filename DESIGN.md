@@ -19,6 +19,7 @@ Expose parameters through a graphical interface with numeric inputs and sliders.
 | Mode | Source and target | Required controls and behavior |
 | --- | --- | --- |
 | Plan | A profile drawn in plan, repeated linearly or in a grid | Counts and spacing; shift, rotation, and scale in the working plane. Other plan patterns can be added. |
+| Rectangular | Curves, polysurfaces, groups, or blocks repeated in 3D | Independent X/Y/Z counts and spacing along the construction-plane axes with shared variation controls. |
 | Curve | A polysurface, group, or block instance repeated along a 2D or 3D curve | Placement along the curve with shift, rotation, and scale variation. |
 | Surface | Objects repeated over a surface | Adjustable U and V sampling density without rebuilding the surface; shared variation controls. |
 | Polysurface / volume | Objects distributed on a polysurface or within a volume | An Interior / Exterior switch selects enclosed fill or outside-face placement. Both support the shared variation controls. |
@@ -30,9 +31,11 @@ A polysurface has separate face domains; do not treat it as one continuous UV gr
 
 ## Confirmed interface structure
 
-Four dedicated tools: Profile Array, Along Curve, Surface Array, and Volume Array.
+Five dedicated tools: Profile Array, Rectangular Array, Along Curve, Surface Array,
+and Volume Array.
 Each has a focused panel and an All array tools back button to the chooser.
-Profile Array exposes Linear/Grid; Volume Array exposes Interior/Exterior.
+Profile Array exposes Linear/Grid; Rectangular Array exposes X/Y/Z count and
+spacing; Volume Array exposes Interior/Exterior.
 Hide irrelevant controls and use descriptive labels. Panels are resizable, with
 scrolling for longer controls and persistent Create/Cancel actions. Random ranges
 are labeled Minimum/Maximum; gradual ranges are labeled Start/End.

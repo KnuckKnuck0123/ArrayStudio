@@ -9,6 +9,13 @@ spec.loader.exec_module(v)
 
 
 class VariationTests(unittest.TestCase):
+    def test_rectangular_mode_validation(self):
+        settings = v.validated({'mode': 'Rectangular', 'count_x': 2, 'count_y': 3,
+                                'count_z': 4, 'spacing_z': 12.5})
+        self.assertEqual(settings['mode'], 'Rectangular')
+        self.assertEqual((settings['count_x'], settings['count_y'], settings['count_z']), (2, 3, 4))
+        self.assertEqual(settings['spacing_z'], 12.5)
+
     def test_gradual_endpoints(self):
         s = v.validated({'variation': 'Gradual', 'uniform_scale': False, 'shift_end': (10, 20, 30), 'scale_end': (2, 3, 4)})
         self.assertEqual(v.values_at(s, 0, 0, (0, 0, 0)), ((0, 0, 0), (0, 0, 0), (1, 1, 1)))

@@ -9,6 +9,7 @@ from Rhino.UI import EtoExtensions
 
 CASES = (
     ('Profiles', 'Profile Array — linear / grid'),
+    ('Rectangular', 'Rectangular Array — X / Y / Z'),
     ('AlongCurve', 'Along Curve — 2D / 3D path'),
     ('Surface', 'Surface Array — U / V'),
     ('Volume', 'Volume Array — exterior / interior'),
@@ -25,8 +26,8 @@ def show_chooser(previous):
 
     chooser = ef.Form()
     chooser.Title = 'Array Studio'
-    chooser.ClientSize = ed.Size(400, 320)
-    chooser.MinimumSize = ed.Size(380, 300)
+    chooser.ClientSize = ed.Size(400, 380)
+    chooser.MinimumSize = ed.Size(380, 350)
     chooser.Padding = ed.Padding(20)
     layout = ef.DynamicLayout()
     layout.Spacing = ed.Size(8, 12)

@@ -8,7 +8,7 @@ build_root="${1:-$project_root/build/package}"
 artifact_dir="$build_root/rh8"
 
 "$rhino_code" project build "$project_root/ArrayStudio.rhproj" \
-  --buildversion 0.9.0 --buildtarget '8.*' --buildpath "$build_root"
+  --buildversion 0.9.1 --buildtarget '8.*' --buildpath "$build_root"
 
 find "$artifact_dir" -maxdepth 1 -name '*.yak' -delete
 if [ -d "$artifact_dir/src" ]; then

@@ -35,14 +35,16 @@ def _placements(s, base, target, tolerance):
     nx, ny, nz = [s['count_' + a] for a in 'xyz']
     direction = 'XYZ'.index(s['progression'])
     mode = s['mode']
-    if mode in ('Linear', 'Grid'):
-        ny = ny if mode == 'Grid' else 1
-        _budget(nx * ny)
-        for j in range(ny):
-            for i in range(nx):
-                point = base.PointAt(i * s['spacing_x'], j * s['spacing_y'])
-                progress = _fraction(i, nx) if mode == 'Linear' else (_fraction(i, nx), _fraction(j, ny), 0.)[direction]
-                yield _copy_frame(base, point), progress
+    if mode in ('Linear', 'Grid', 'Rectangular'):
+        ny = ny if mode != 'Linear' else 1
+        nz = nz if mode == 'Rectangular' else 1
+        _budget(nx * ny * nz)
+        for k in range(nz):
+            for j in range(ny):
+                for i in range(nx):
+                    point = base.PointAt(i * s['spacing_x'], j * s['spacing_y'], k * s['spacing_z'])
+                    progress = (_fraction(i, nx), _fraction(j, ny), _fraction(k, nz))[direction]
+                    yield _copy_frame(base, point), progress
         return
     if mode == 'Curve':
         if not isinstance(target, rg.Curve) or not target.IsValid or target.GetLength() <= tolerance:

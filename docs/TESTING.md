@@ -13,8 +13,8 @@ installed Package Manager command.
 3. Open and save `src/TestConnection.py`. Press **Ctrl+Shift+B on Windows** or
    **Cmd+Shift+B on Mac**. Look for its connection message in Rhino.
 4. Open `src/ArrayTools.py` and use the same hotkey for the chooser, or run a
-   dedicated launcher: `ProfileArray.py`, `ArrayAlongCurve.py`, `SurfaceArray.py`,
-   or `VolumeArray.py` in `src`.
+   dedicated launcher: `ProfileArray.py`, `RectangularArray.py`,
+   `ArrayAlongCurve.py`, `SurfaceArray.py`, or `VolumeArray.py` in `src`.
 
 The task runs the **active saved file**. Do not use the IDE's ordinary Python Run
 button or install `Rhino`, `Eto`, or `scriptcontext` with pip; Rhino supplies them.
@@ -37,6 +37,7 @@ appropriate OS entry in `.vscode/tasks.json`.
 | Windows source workflow and UI | Noah reports all tools working |
 | Installed package on macOS | Clean-start `ArrayStudio` command check passed |
 | Public Package Manager | `ArrayStudio (0.9.0)` verified on McNeel's server |
+| Rectangular X/Y/Z mode | Rhino engine checks passed; Noah reports the interactive 0.9.1 source workflow works great |
 
 Automated checks do not establish interactive acceptance. Record platform, Rhino
 version, and the cases tested when updating this table.
@@ -65,6 +66,17 @@ Interior containment applies to **base points before variation**. Copies may
 overlap or extend beyond the solid; this is not full-object containment or packing.
 For a multi-object source, “27 copies” means 27 repeated units, not 27 individual
 Rhino objects.
+
+## Rectangular array
+
+1. Run `src/RectangularArray.py` and select an asymmetric source.
+2. Set X/Y/Z counts to **2/3/4** and spacing to **5/7/11**. Expect 24 copies
+   arranged along the construction-plane axes.
+3. Choose Gradual variation, change along Z, and set an obvious shift, rotation,
+   or scale end value. Copies on each layer should match and progress by layer.
+4. Switch to Random and confirm the seed and reroll behavior match other tools.
+5. Enable Falloff and confirm its spherical zone affects variation through depth.
+6. Repeat with a polysurface, group, and block, then verify one-step Undo.
 
 ## Shared acceptance checklist
 

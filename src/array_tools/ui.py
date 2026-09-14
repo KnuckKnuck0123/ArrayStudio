@@ -11,6 +11,9 @@ from .engine import build_transforms, DEFAULTS
 from .objects import capture_sources
 
 
+MODES = ('Linear', 'Grid', 'Curve', 'Surface', 'Volume', 'Rectangular')
+
+
 def widget(kind, **properties):
     control = kind()
     for name, value in properties.items():
@@ -96,7 +99,9 @@ class ArrayToolsWindow(ef.Form):
         super().__init__()
         self.doc = doc
         self.case = case
-        self.Title = {'Profiles': 'Profile Array', 'AlongCurve': 'Along Curve', 'Surface': 'Surface Array', 'Volume': 'Volume Array'}[case]
+        self.Title = {'Profiles': 'Profile Array', 'Rectangular': 'Rectangular Array',
+                      'AlongCurve': 'Along Curve', 'Surface': 'Surface Array',
+                      'Volume': 'Volume Array'}[case]
         self.ClientSize = ed.Size(640, 640)
         self.MinimumSize = ed.Size(600, 500)
         self.Padding = ed.Padding(12)
@@ -116,7 +121,8 @@ class ArrayToolsWindow(ef.Form):
         self.status.Height = 52
         self.source_label = label('No source selected')
         self.target_label = label('No target selected')
-        self.mode = dropdown(['Linear', 'Grid', 'Curve', 'Surface', 'Volume'], {'Profiles': 1, 'AlongCurve': 2, 'Surface': 3, 'Volume': 4}[case])
+        self.mode = dropdown(MODES, {'Profiles': 1, 'AlongCurve': 2, 'Surface': 3,
+                                     'Volume': 4, 'Rectangular': 5}[case])
         self.pattern = dropdown(['Linear', 'Grid'], 1)
         self.pattern.SelectedIndexChanged += self.on_pattern
         self.volume_mode = dropdown(['Exterior', 'Interior'])
@@ -213,8 +219,8 @@ class ArrayToolsWindow(ef.Form):
         layout.AddRow(self.orient)
         for axis in 'xyz':
             self.add_number(layout, 'count_' + axis, 'Count ' + axis.upper(), DEFAULTS['count_' + axis], 1, 100, True)
-        for axis in 'xy':
-            self.add_number(layout, 'spacing_' + axis, 'Plan spacing ' + axis.upper(), 10, .001, 10000)
+        for axis in 'xyz':
+            self.add_number(layout, 'spacing_' + axis, 'Spacing ' + axis.upper(), DEFAULTS['spacing_' + axis], .001, 10000)
         note = label('')
         self.placement_note = note
         note.Wrap = ef.WrapMode.Word
@@ -266,12 +272,13 @@ class ArrayToolsWindow(ef.Form):
 
     def settings(self):
         settings = dict(DEFAULTS)
-        for key in ('count_x', 'count_y', 'count_z', 'spacing_x', 'spacing_y', 'seed', 'falloff_radius', 'falloff_strength', 'falloff_softness'):
+        for key in ('count_x', 'count_y', 'count_z', 'spacing_x', 'spacing_y', 'spacing_z',
+                    'seed', 'falloff_radius', 'falloff_strength', 'falloff_softness'):
             settings[key] = self.numbers[key].value
         for name in ('shift', 'rotate', 'scale'):
             for end in ('start', 'end'):
                 settings[name + '_' + end] = tuple(self.numbers['{}_{}_{}'.format(name, end, i)].value for i in range(3))
-        settings.update(mode=['Linear', 'Grid', 'Curve', 'Surface', 'Volume'][self.mode.SelectedIndex],
+        settings.update(mode=MODES[self.mode.SelectedIndex],
                         volume_mode=['Exterior', 'Interior'][self.volume_mode.SelectedIndex],
                         uniform_scale=bool(self.uniform.Checked), orient=bool(self.orient.Checked), variation=['None', 'Random', 'Gradual'][self.variation.SelectedIndex],
                         progression='XYZ'[self.progression.SelectedIndex], falloff_enabled=bool(self.falloff.Checked),
@@ -340,8 +347,8 @@ class ArrayToolsWindow(ef.Form):
     def pick_target(self):
         def run():
             mode = self.settings()['mode']
-            if mode in ('Linear', 'Grid'):
-                self.status.Text = 'Plan arrays do not need a target.'
+            if mode in ('Linear', 'Grid', 'Rectangular'):
+                self.status.Text = 'This array does not need a target.'
                 return
             getter = Rhino.Input.Custom.GetObject()
             getter.SetCommandPrompt('Select target ' + ('curve' if mode == 'Curve' else 'surface or polysurface'))
@@ -376,21 +383,27 @@ class ArrayToolsWindow(ef.Form):
         return row
 
     def update_controls(self):
-        mode = ['Linear', 'Grid', 'Curve', 'Surface', 'Volume'][self.mode.SelectedIndex]
+        mode = MODES[self.mode.SelectedIndex]
         volume = mode == 'Volume'
         interior = volume and self.volume_mode.SelectedIndex == 1
+        rectangular = mode == 'Rectangular'
         uv = mode == 'Surface' or (volume and not interior)
         self.volume_row.Visible = volume
-        self.target_row.Visible = mode not in ('Linear', 'Grid')
+        self.target_row.Visible = mode not in ('Linear', 'Grid', 'Rectangular')
         self.orient.Visible = mode in ('Curve', 'Surface') or (volume and not interior)
         self.rows['count_y'].Visible = mode not in ('Linear', 'Curve')
-        self.rows['count_z'].Visible = interior
-        self.rows['spacing_x'].Visible = mode in ('Linear', 'Grid')
-        self.rows['spacing_y'].Visible = mode == 'Grid'
-        names = ['U count', 'V count', 'Depth count'] if uv else (['Columns', 'Rows', 'Layers'] if mode == 'Grid' or interior else ['Copies', 'Rows', 'Layers'])
+        self.rows['count_z'].Visible = interior or rectangular
+        self.rows['spacing_x'].Visible = mode in ('Linear', 'Grid', 'Rectangular')
+        self.rows['spacing_y'].Visible = mode in ('Grid', 'Rectangular')
+        self.rows['spacing_z'].Visible = rectangular
+        names = (['U count', 'V count', 'Depth count'] if uv else
+                 ['X count', 'Y count', 'Z count'] if rectangular else
+                 ['Columns', 'Rows', 'Layers'] if mode == 'Grid' or interior else
+                 ['Copies', 'Rows', 'Layers'])
         for axis, title in zip('xyz', names):
             self.titles['count_' + axis].Text = title
-        self.placement_note.Text = ('Copies fill a 3D grid inside the volume. Their base points stay inside before variation; geometry may cross the boundary.' if interior else
+        self.placement_note.Text = ('Copies form a 3D grid along the active construction-plane axes. Spacing is measured between copy base points in model units.' if rectangular else
+                                    'Copies fill a 3D grid inside the volume. Their base points stay inside before variation; geometry may cross the boundary.' if interior else
                                     'Counts sample the surface in U and V without rebuilding it. Trimmed-out positions are skipped.' if uv else
                                     'Copies are evenly spaced along the curve. Local X follows its tangent when orientation is enabled.' if mode == 'Curve' else
                                     'Copies follow the construction plane. Spacing is measured between copy base points in model units.')

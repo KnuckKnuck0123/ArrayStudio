@@ -1,12 +1,13 @@
 ---
 name: ArrayStudio
-version: 0.9.0
+version: 0.9.1
 authors:
 - Noah K
 description: >
-  Cross-platform variation array tools for Rhino 8. Create profile, curve,
-  surface, and interior or exterior volume arrays with shift, rotation, scale,
-  deterministic random variation, gradual variation, and spatial falloff.
+  Cross-platform variation array tools for Rhino 8. Create profile, rectangular
+  XYZ, curve, surface, and interior or exterior volume arrays with shift,
+  rotation, scale, deterministic random variation, gradual variation, and
+  spatial falloff.
 license: MIT
 url: https://github.com/KnuckKnuck0123/ArrayStudio
 icon: icon.png
@@ -14,6 +15,8 @@ keywords:
 - array
 - architecture
 - aggregation
+- rectangular
+- grid
 - variation
 - curve
 - surface

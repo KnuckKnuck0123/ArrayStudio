@@ -19,7 +19,7 @@ MAX_CANDIDATES = 5000
 def validated(settings):
     result = dict(DEFAULTS)
     result.update(settings)
-    for key, choices in [('mode', ('Linear', 'Grid', 'Curve', 'Surface', 'Volume')),
+    for key, choices in [('mode', ('Linear', 'Grid', 'Rectangular', 'Curve', 'Surface', 'Volume')),
                          ('volume_mode', ('Exterior', 'Interior')),
                          ('variation', ('None', 'Random', 'Gradual')),
                          ('progression', ('X', 'Y', 'Z'))]:
